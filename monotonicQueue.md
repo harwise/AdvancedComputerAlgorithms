@@ -5,8 +5,7 @@ Structure
 
 Algorithm
 ---------
-* Sliding window
-* O(N)
+* Sliding window (updateHead, removeTail, getTail) - O(N)
 
 Practices
 ---------
