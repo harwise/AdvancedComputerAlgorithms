@@ -145,10 +145,14 @@
     <ClCompile Include="EulerianGraph.cpp" />
     <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="Graph.h" />
+    <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="SegmentTree.cpp" />
     <ClCompile Include="Trees.cpp" />
     <ClCompile Include="TreeTraversal.cpp" />
     <ClCompile Include="UnionFindDisjointSet.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BinarySearch.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
