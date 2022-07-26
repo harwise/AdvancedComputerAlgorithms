@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <tuple>
+#include <climits>
+
+using namespace std;
+
+vector< tuple<int, int, int> > edge;
+int dis[1001];
+
+bool bellman(int n)
+{
+	dis[0] = 0;
+
+	for (int i = 0; i < n - 1; ++i) for (auto& [u, v, w] : edge)
+		if (dis[u] != -1)  dis[v] = min(dis[v], dis[u] + w);
+
+	for (auto& [u, v, w] : edge) if (dis[u] + w < dis[v]) return true;
+
+	return false;
+}
+
+int main()
+{
+	// fast io
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+
+	int T;
+	cin >> T;
+
+	while (T--)
+	{
+		int n, m;
+		cin >> n >> m;
+
+		// init
+		edge.clear();
+		fill(dis, dis + n, INT_MAX);
+
+		while (m--)
+		{
+			int u, v, w;
+			cin >> u >> v >> w;
+			edge.push_back({ make_tuple(u, v, w) });
+		}
+
+		// bellman algorithm
+		cout << (bellman(n) ? "possible\n" : "not possible\n");
+	}
+
+	return 0;
+}

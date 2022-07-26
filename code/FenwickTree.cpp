@@ -22,7 +22,7 @@
  * Query: sum of prefix sums.
           The count of bit 1 is how many prefix sums are taken.
  * Update: doulbe the lowest bit 1 until overflow.
-           The count of bit 0 before the lowest bit 1 is the loop count.
+           The count of bit 0 is the loop count (how many prefix sums are updated).
  */
 
 #include <vector>

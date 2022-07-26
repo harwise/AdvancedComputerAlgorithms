@@ -1,0 +1,96 @@
+
+动态规划
+//uva 104 arbitrage(套利)
+//版权所有（c） 2015 heweiliang
+//题目描述:
+//输入:
+//3
+//1.2 .89
+//.88 5.1
+//1.1 0.15
+//输出:
+//1 2 1
+//输入描述：3为货币种数 接下来三行为 每种货币对于其他货币的兑换比例
+//题目描述:题目要求出兑换的次数最少（且次数少于或等于n次）的并且满足
+//         兑换后满足获利大于0.01的兑换序列
+//输出描述：将1货币兑换成2货币再将2货币兑换成1货币,可获利超过0.01,次
+//          过程兑换了2次
+//解题思路:其本质是在有向图中求边权积大于1.01的最小环,采用floyd最短路
+//         算法思想和动态规划思想求最大的兑换比例.
+//         利用profit[i][j][step]表示兑换次数为step次的从i到j的最大兑
+//         换比例。则本题相当求profit[i][i][step]大于1.01中step最小的
+//         兑换序列。想要profit[i][i][step]>1.01则必须求最大的profit 
+//         [i][i][step]来和1.01比较。
+//         其状态转换方程：profit[i][j][step]=MAX{profit[i][k][step-1]*profit[k][j][1]}
+
+#include <iostream>
+using namespace std;
+const int NMAX=20;
+float profit[NMAX+1][NMAX+1][NMAX+1];//存储i到j在step步兑换的最大兑换比例
+int prestep[NMAX+1][NMAX+1][NMAX+1];//存储i到j在step步得到兑换最大比例时step-1步是和哪种货币进行兑换
+void output(int i,int j,int step)
+{
+    if(!step)
+        return ;
+    else
+    {
+        output(i,prestep[i][j][step],step-1);
+        cout<<prestep[i][j][step]<<" ";
+    }
+}
+int main(int argc,char *argv[])
+{
+    int ai,aj,as;
+    bool arbitrage;
+    int n;
+    while(cin>>n)
+    {
+        arbitrage=false;
+        for(int i=1;i<=n;i++)
+            for(int j=1;j<=n;j++)
+                for(int k=1;k<=n;k++)
+                    profit[i][j][k]=0.0;
+        for(int i=1;i<=n;i++)
+            for(int j=1;j<=n;j++)
+            {
+                if(i==j)
+                    profit[i][j][1]=1.0;
+                else
+                    cin>>profit[i][j][1];
+                prestep[i][j][1]=i;
+            }
+        for(int step=2;step<=n;step++)
+
+                for(int i=1;i<=n;i++)
+                    for(int j=1;j<=n;j++)
+                        for(int k=1;k<=n;k++)
+                    {   
+
+                        if(profit[i][j][step]<profit[i][k][step-1]*profit[k][j][1])
+                        {
+                            profit[i][j][step]=profit[i][k][step-1]*profit[k][j][1];
+                            prestep[i][j][step]=k;
+                            if(i==j&&profit[i][j][step]>1.01)
+                            {
+                                arbitrage=true;
+                                ai=i;
+                                aj=j;
+                                as=step;
+                                goto success;
+                            }
+                        }
+                    }
+success:
+                    if(arbitrage)
+                    {
+                        output(ai,aj,as);
+                        cout<<ai<<endl;
+                    }
+                    else
+                    {
+                        cout<<"no arbitrage sequence exists"<<endl;
+                    }
+
+    }
+    return 0;
+}
