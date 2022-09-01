@@ -24,14 +24,14 @@ public:
 
    bool isSameSet(int i, int j)
    {
-      return findSet(i) == findset(j);
+      return findSet(i) == findSet(j);
    }
 
    void unionSet(int i, int j)
    {
-      iRoot = findSet(i);
-      jRoot = findSet(j);
-      pset[iRoot] = jRoot;
+      int iRoot = findSet(i);
+      int jRoot = findSet(j);
+      pset_[iRoot] = jRoot;
       pSetSize_[jRoot] += pSetSize_[iRoot];
       numSets_--;
    }

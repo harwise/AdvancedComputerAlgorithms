@@ -1,4 +1,17 @@
 
+/*
+ * Invariants:
+ * dropped_left, [l, mid), mid, [mid+1, h), h, dropped_right
+ * 
+ * dropped_left:     dropped smaller ones;
+ * dropped_right:    dropped greater ones;
+ * l:                its left is smaller / or out of range.
+ * h:                a[h] is alwasy greater / or out of range.
+ * 
+ * when l == h, this is the target point. Because:
+ * It is the right-most one whose left neighour is smaller than X.
+ * It is the left-most one that is greater than X.
+ */
 
 int bs_upper_bound(int a[], int n, int x) {
     int l = 0;

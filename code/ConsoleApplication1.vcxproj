@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,6 +133,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,14 +143,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BigInteger.cpp" />
     <ClCompile Include="BipartiteGraph.cpp" />
+    <ClCompile Include="Computational-Geometry.cpp" />
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="DAG.cpp" />
     <ClCompile Include="EulerianGraph.cpp" />
     <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="Graph.h" />
+    <ClCompile Include="math-CycleFinding.cpp" />
+    <ClCompile Include="math-Exponentiation.cpp" />
+    <ClCompile Include="math-Numbers.cpp" />
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="SegmentTree.cpp" />
+    <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Trees.cpp" />
     <ClCompile Include="TreeTraversal.cpp" />
     <ClCompile Include="UnionFindDisjointSet.h" />

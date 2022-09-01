@@ -10,7 +10,7 @@
  * Transitions: directed edges.
  * overlapping problems: topological sort of this DAG allows each overlapping
  *                       subproblem (sub graph of the DAG) to be processed
- *                       just once.
+ *                       just once. - Bottom-up DP.
  * 
  * 
  * Converting General Graph to DAG

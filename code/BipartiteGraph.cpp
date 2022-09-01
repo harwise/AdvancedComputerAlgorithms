@@ -25,6 +25,7 @@ public:
       /*
        * The blossom algorithm finds a maximum-cardinality matching in general
        * (not necessarily bipartite) graphs. It runs in time O(VVE).
+       * 不具有公共端点的边的集合。
        */
 
       // O(VV+VE)
@@ -59,6 +60,10 @@ public:
     * Every v not in S has at least one neighbour in S.
     */
    int mis() {
+      /*
+       * General graphs: based on Maximum-Cardinality Matching, O(VVE)
+       */
+
       return V_ - mcbm_alternating_path();
    }
 
@@ -82,6 +87,8 @@ public:
        * V_IN = v that has positive-indegree
        * E' = all edges from V_IN to V_OUT
        * 
+       * Imagine we have no edge at all, then we need V vertices/paths
+       * to cover all vertices.
        * Vertices must not be shared in MPC, so one matching on G' means
        * two vertices on G can be grouped on a path.
        * return (V_ - MCBM on G').

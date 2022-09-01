@@ -78,26 +78,26 @@ public:
    }
 
    // topological sort
-   void dfs2(int u) {
+   void dag_topoSort_dfs(int u) {
       dfs_num_[u] = DFS_BLACK;
       for (int j = 0; j < (int)adjList_[u].size(); ++j) {
          ii v = adjList_[u][j];
          if (dfs_num_[v.first] == DFS_WHITE) {
-            dfs2(v.first);
+            dag_topoSort_dfs(v.first);
          }
       }
       topoSort_.push_back(u);       // post-order!
    }
-   void topoSort() {
+   void dag_topoSort() {
       topoSort_.clear();
       dfs_num_.assign(V_, DFS_WHITE);
       for (int i = 0; i < V_; ++i) {
          if (dfs_num_[i] == DFS_WHITE) {
-            dfs2(i);
+            dag_topoSort_dfs(i);
          }
       }
       std::reverse(topoSort_.begin(), topoSort_.end());
-      std::cout << topoSort;
+      // std::cout << topoSort_;
    }
 
    bool isBipartite(int s) {
@@ -270,10 +270,11 @@ class GraphMst : public Graph
 {
 public:
    void kruskal_mst() {
+      // O(E*logV)
       std::vector<std::pair<int, ii>> edgeList; // weight, vi, vj
       for (int i = 0; i < E_; ++i) {
          int a, b, weight;
-         scanf("%d %d %d", &a, &b, &weight);
+         scanf_s("%d %d %d", &a, &b, &weight);
          edgeList.push_back(std::make_pair(weight, ii(a,b)));
       }
       std::sort(edgeList.begin(), edgeList.end());
@@ -292,6 +293,7 @@ public:
    }
 
    void prim_mst() {
+      // O(E*logV)
       vi taken;
       std::priority_queue<ii> pq;
 
@@ -358,6 +360,7 @@ public:
    }
 
    void weighted_dijkstra_sssp(int s) {
+      // O(V+E*logV)
       int INF = 1e9;;
       vi dist(V_, INF);
       dist[s] = 0;
@@ -381,6 +384,7 @@ public:
    }
 
    void negative_cycle_bellman_ford_sssp(int s) {
+      // O(V*E)
       int INF = 1e9;
       vi dist(V_, INF);
       dist[s] = 0;
@@ -415,6 +419,7 @@ class GraphApsp : public Graph
 {
 public:
    void floyd_warshall_apsp() {
+      // O(V*V*V)
       for (int k = 0; k < V_; k++) {   // DP: i->(0,...,k)->j
          for (int i = 0; i < V_; i++) {
             for (int j = 0; j < V_; j++) {
@@ -480,6 +485,8 @@ class GraphMaxFlow : public Graph
 {
 public:
    void ford_fulkerson() {
+      // O(f*E)
+
       // residual graph
       // mf = 0
       // while (there exists an augmenting path p from s to t) {
@@ -493,8 +500,10 @@ public:
       // output mf
    }
 
-   // ford_fulkerson + BFS
+   // EK: ford_fulkerson + BFS
    int edmonds_karp(int s, int t) {
+      // O(V*E*E)
+
       int flow = 0;
       std::vector<int> parent(V_);
 
@@ -545,29 +554,31 @@ public:
    // Returns maximum flow in graph
    int dinic(int s, int t)
    {
-       // Corner case
-       if (s == t)
-           return -1;
- 
-       int total = 0;  // Initialize result
- 
-       // Augment the flow while there is path
-       // from source to sink
-       while (dinic_bfs(s, t) == true)
-       {
-           // store how many edges are visited
-           // from V { 0 to V }
-           int *start = new int[V_+1] {0};
- 
-           // while flow is not zero in graph from S to D
-           while (int flow = dinic_sendFlow(s, INT_MAX, t, start))
- 
-               // Add path flow to overall flow
-               total += flow;
-       }
- 
-       // return maximum flow
-       return total;
+     // O(V*V*E)
+
+     // Corner case
+      if (s == t)
+          return -1;
+
+      int total = 0;  // Initialize result
+
+      // Augment the flow while there is path
+      // from source to sink
+      while (dinic_bfs(s, t) == true)
+      {
+          // store how many edges are visited
+          // from V { 0 to V }
+          int *start = new int[V_+1] {0};
+
+          // while flow is not zero in graph from S to D
+          while (int flow = dinic_sendFlow(s, INT_MAX, t, start))
+
+              // Add path flow to overall flow
+              total += flow;
+      }
+
+      // return maximum flow
+      return total;
    }
 
    // Finds if more flow can be sent from s to t.
@@ -799,6 +810,9 @@ public:
      */
     int MinCostMaxFlow(int s, int t, int maxflow)
     {
+        // O(VE*VE)
+        // EK BFS: f = VE;
+        // BellmanFord(find a aug path): VE.
         int flow = 0, cost = 0;
         while(BellmanFord(s, t, flow, cost));
         if(flow < maxflow)

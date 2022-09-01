@@ -48,8 +48,8 @@ public:
    // https://cp-algorithms.com/graph/lca_binary_lifting.html#algorithm
    void lca_binary_lifting_process(int root) {
       /*
-       * Preprocessing: O(N*logN)
-       * query:         O(logN)
+       * Preprocessing: O(V*logV)
+       * query:         O(logV)
        */
        tin_.resize(V_);
        tout_.resize(V_);
