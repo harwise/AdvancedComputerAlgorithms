@@ -17,7 +17,7 @@
  * Some DYNAMIC sequence
  * RMQ: range minimum query
  * 
- * Query O(logn); Update O(logn)
+ * Construction O(n); Query O(logn); Update O(logn)
  */
 
 #include <vector>

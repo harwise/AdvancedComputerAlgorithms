@@ -1,0 +1,139 @@
+經典題，只要枚舉第一排即可
+
+因為目標都是為了讓所有的電燈關起來，所以我只要把上一排的燈按掉
+
+不按掉的話 這一排就沒有任何燈泡能夠把它按掉，所以一定要按掉
+
+按完之後 能夠剛剛好在最後一排燈泡都暗的 就是答案
+
+//
+//        GGGGGGGGGGGGG        CCCCCCCCCCCCC               AAA
+//     GGG::::::::::::G     CCC::::::::::::C              A:::A
+//   GG:::::::::::::::G   CC:::::::::::::::C             A:::::A
+//  G:::::GGGGGGGG::::G  C:::::CCCCCCCC::::C            A:::::::A
+// G:::::G       GGGGGG C:::::C       CCCCCC           A:::::::::A
+//G:::::G              C:::::C                        A:::::A:::::A
+//G:::::G              C:::::C                       A:::::A A:::::A
+//G:::::G    GGGGGGGGGGC:::::C                      A:::::A   A:::::A
+//G:::::G    G::::::::GC:::::C                     A:::::A     A:::::A
+//G:::::G    GGGGG::::GC:::::C                    A:::::AAAAAAAAA:::::A
+//G:::::G        G::::GC:::::C                   A:::::::::::::::::::::A
+// G:::::G       G::::G C:::::C       CCCCCC    A:::::AAAAAAAAAAAAA:::::A
+//  G:::::GGGGGGGG::::G  C:::::CCCCCCCC::::C   A:::::A             A:::::A
+//   GG:::::::::::::::G   CC:::::::::::::::C  A:::::A               A:::::A
+//     GGG::::::GGG:::G     CCC::::::::::::C A:::::A                 A:::::A
+//        GGGGGG   GGGG        CCCCCCCCCCCCCAAAAAAA                   AAAAAAA
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <climits>
+#include <vector>
+#include <set>
+#include <map>
+#include <queue>
+#include <cctype>
+#include <utility>
+#include <ctime>
+using namespace std;
+#ifdef DEBUG
+#define VAR(a,b) decltype(b) a=(b)
+#define debug(...) printf("DEBUG: "),printf(__VA_ARGS__)
+#define gettime() end_time=clock();printf("now running time is %.7f\n",(float)(end_time - start_time)/CLOCKS_PER_SEC);
+#else
+#define VAR(a,b) __typeof(b) a=(b)
+#define debug(...)
+#define gettime()
+#endif
+typedef unsigned int uint;
+typedef long long int Int;
+typedef unsigned long long int UInt;
+#define Set(a,s) memset(a,s,sizeof(a))
+#define Write(w) freopen(w,"w",stdout)
+#define Read(r) freopen(r,"r",stdin)
+#define Pln() printf("\n")
+#define I_de(x,n)for(int i=0;i<n;i++)printf("%d ",x[i]);Pln()
+#define De(x)printf(#x"%d\n",x)
+#define For(i,x)for(int i=0;i<x;i++)
+#define CON(x,y) x##y
+#define Pmz(dp,nx,ny)for(int hty=0;hty<ny;hty++){for(int htx=0;htx<nx;htx++){\
+    printf("%d ",dp[htx][hty]);}Pln();}
+#define M 30005
+#define PII pair<int,int>
+#define PB push_back
+#define oo INT_MAX
+#define Set_oo 0x3f
+#define FOR(a,b) for(VAR(a,(b).begin());a!=(b).end();++a)
+#define eps 1e-6
+#define X first
+#define Y second
+clock_t start_time=clock(), end_time;
+bool xdy(double x,double y){return x>y+eps;}
+bool xddy(double x,double y){return x>y-eps;}
+bool xcy(double x,double y){return x<y-eps;}
+bool xcdy(double x,double y){return x<y+eps;}
+int min3(int x,int y,int z){
+    int tmp=min(x,y);
+    return min(tmp,z);
+}
+int max3(int x,int y,int z){
+    int tmp=max(x,y);
+    return max(tmp,z);
+}
+char str[1005];
+int mz[12][12];
+int omz[12][12];
+void push(int x,int y){
+    mz[y][x]^=1;
+    if(y<9)mz[y+1][x]^=1;
+    if(x<9)mz[y][x+1]^=1;
+    if(y>0)mz[y-1][x]^=1;
+    if(x>0)mz[y][x-1]^=1;
+}
+bool check(int &ans){
+    for(int k=1;k<10;k++){//y
+        for(int i=0;i<10;i++){//x
+            if(mz[k-1][i]){
+                push(i,k);
+                ans++;
+            }
+        }
+    }
+    for(int i=0;i<10;i++){
+        if(mz[9][i])return false;
+    }
+    return true;
+}
+void solve(){
+    int fans=oo,ans;
+    for(int i=0;i<(1<<10);i++){
+        ans=0;
+        for(int j=0;j<10;j++){
+            if(!((i>>j)&1))continue;
+            push(j,0);
+            ans++;
+        }
+        if(check(ans)){
+            fans=min(ans,fans);
+        }
+        memcpy(mz,omz,sizeof(omz));
+    }
+    if(fans<oo)printf("%s %d\n",str,fans);
+    else printf("%s -1\n");
+}
+int main() {
+    ios_base::sync_with_stdio(0);
+    while(~scanf("%s",str)){
+        char ctmp[12];
+        if(!strcmp(str,"end"))break;
+        for(int i=0;i<10;i++){
+            scanf("%s",ctmp);
+            for(int j=0;j<10;j++){
+                mz[i][j]=(ctmp[j]=='#')?0:1;
+            }
+        }
+//        Pmz(mz,10,10);
+        memcpy(omz,mz,sizeof(mz));
+        solve();
+    }

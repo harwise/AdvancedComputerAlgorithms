@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <cmath>
 #include <numbers>
+#include <vector>
 
 constexpr double EPS = (1e-9);
 
@@ -14,20 +15,16 @@ struct point_i {
 };
 
 struct point {
-   double x;
-   double y;
+   double x, y;   // only used if more precision is needed
+   point() { x = y = 0.0; }                      // default constructor
+   point(double _x, double _y) : x(_x), y(_y) {}        // user-defined
+   bool operator == (point other) const {
+      return (fabs(x - other.x) < EPS && (fabs(y - other.y) < EPS));
+   }
+   bool operator <(const point &p) const {
+      return x < p.x || (abs(x - p.x) < EPS && y < p.y);
+   }
 };
-
-// useful for sort
-bool operator < (const point& lhs, const point& rhs) {
-   if (std::fabs(lhs.x - rhs.x) > EPS)
-      return lhs.x < rhs.x;
-   return lhs.y < rhs.y;
-}
-
-bool areSame(const point& p1, const point& p2) {
-   return std::fabs(p1.x - p2.x) < EPS && fabs(p1.y - p2.y) < EPS;
-}
 
 double dist(const point& p1, const point& p2) {
    // hypotenuse: the longest side of a right triangle, opposite the right angle.
@@ -107,30 +104,40 @@ double norm_sq(const vec &v) {
    return v.x * v.x + v.y * v.y;
 }
 
-double distToLine(const point& p, const point& line_a, const point& line_b, point& c) {
+double distToLine(const point& p, const point& A, const point& B, point& c) {
    // c = a + u * (a->b)
-   vec ab = toVec(line_a, line_b);
-   vec ap = toVec(line_a, p);
+   vec ab = toVec(A, B);
+   vec ap = toVec(A, p);
 
    double u = dot(ap, ab) / norm_sq(ab);
-   c = translate(line_a, scale(ab, u));
+   c = translate(A, scale(ab, u));
    return dist(p, c);
 }
 
-double distToLineSegment(const point& p, const point& line_a, const point& line_b, point& c) {
-   vec ab = toVec(line_a, line_b);
-   vec ap = toVec(line_a, p);
+double distToLineSegment(const point& p, const point& A, const point& B, point& c) {
+   vec ab = toVec(A, B);
+   vec ap = toVec(A, p);
 
    double u = dot(ap, ab) / norm_sq(ab);
    if (u < 0.0) {
-      c = line_a;
-      return dist(p, line_a);
+      c = A;
+      return dist(p, A);
    }
    if (u > 1.0) {
-      c = line_b;
-      return dist(p, line_b);
+      c = B;
+      return dist(p, B);
    }
-   return distToLine(p, line_a, line_b, c);
+   return distToLine(p, A, B, c);
+}
+
+// compute the intersection point between line segment p-q and line A-B
+// p-q must cross the line
+point lineIntersectSeg(const point& p, const point& q,
+                       const point& A, const point& B) {
+  double a = B.y-A.y, b = A.x-B.x, c = B.x*A.y - A.x*B.y;
+  double u = fabs(a*p.x + b*p.y + c);     // the distance (scaled) from p to the line.
+  double v = fabs(a*q.x + b*q.y + c);
+  return point((p.x*v + q.x*u) / (u+v), (p.y*v + q.y*u) / (u+v));
 }
 
 // angle aob in rad
@@ -275,3 +282,180 @@ bool canFormTriangle(double a, double b, double c) {
 // kite
 // rhombus  菱形
 
+
+//-----------------------------------------------------------------------------
+
+// P is a cw/ccw polygon and P[0] == P[n-1]
+double perimeter(const std::vector<point> &P) {
+   double result = 0.0;
+   for (int i = 0; i < (int)P.size() - 1; i++)
+      result += dist(P[i], P[i+1]);
+   return result;
+}
+
+// P is a cw/ccw polygon and P[0] == P[n-1]
+double area(const std::vector<point> &P) {
+   double result = 0.0;
+   for (int i = 0; i < (int)P.size() - 1; i++) {
+      vec v1 = {P[i].x, P[i+1].y};
+      vec v2 = {P[i].x, P[i+1].y};
+      result += cross(v1, v2);
+   }
+   return std::fabs(result/2.0);
+}
+
+// P is a cw/ccw polygon and P[0] == P[n-1]
+bool isConvex(const std::vector<point> &P) {
+   int sz = (int)P.size();
+   if (sz <= 3) return false;
+
+   bool isLeft = ccw(P[0], P[1], P[2]);
+   for (int i = 1; i < sz - 1; i++) {
+      int i3 = ((i+2 == sz) ? 1: i+2);
+      if (ccw(P[i], P[i+1], P[i3]) != isLeft)
+         return false;
+   }
+   return true;
+}
+
+// P is a cw/ccw polygon and P[0] == P[n-1]
+// convex or concave
+// -1/0/1: inside/on/outside
+int inPolygon(const point &pt, const std::vector<point> &P) {
+   int n = (int)P.size();
+   if (n <= 3)   return -1;
+
+  for (int i = 0; i < n-1; ++i)                  // on vertex/edge?
+    if (std::fabs(dist(P[i], pt) + dist(pt, P[i+1]) - dist(P[i], P[i+1])) < EPS)
+      return 0;
+
+   double sum = 0;
+   for (int i = 0; i < (int)P.size() - 1; i++) {
+      if (ccw(pt, P[i], P[i+1]))
+         sum += angle(P[i], pt, P[i+1]);
+      else
+         sum -= angle(P[i], pt, P[i+1]);
+   }
+
+   // in: 360 degree; out: 0 degree.
+   return std::fabs(sum) > std::numbers::pi ? 1 : -1;
+}
+
+// P is a cw/ccw polygon and P[0] == P[n-1]
+// convex
+// return the left side polygon
+std::vector<point> cutPolygon(const point& A, const point& B,
+                              const std::vector<point>& Q) {
+   std::vector<point> P;
+   for (int i = 0; i < (int)Q.size(); i++) {
+      double left1 = cross(toVec(A, B), toVec(A, Q[i]));
+      if (std::abs(left1) < EPS) {     // Q[i] is on the line.
+         P.push_back(Q[i]);
+         continue;
+      }
+
+      double left2 = 0;
+      if (i != (int)Q.size() - 1) {
+         left2 = cross(toVec(A, B), toVec(A, Q[i+1]));
+      }
+
+      if (left1 * left2 < -EPS) {   // edge(Q[i], Q[i+1]) cross the line
+         P.push_back(lineIntersectSeg(Q[i], Q[i+1], A, B));
+      }
+   }
+   if (!P.empty() && !(P.back() == P.front()))
+      P.push_back(P.front());                      // wrap around
+
+   return P;
+}
+
+/*
+ * Convecx Hull.
+ * 1) Contains all points.
+ * 2) The area is maximized.
+ * 3) The circumference is minmized.
+ */
+// CH: Convex Hull;
+// Graham Scan. O(nlogn).
+std::vector<point> CH_Graham(std::vector<point> &Pts) {
+   std::vector<point> P(Pts);
+   int n = (int)P.size();
+   if (n <= 3) {
+      if (!(P[0] == P[n - 1])) {
+         P.push_back(P[0]);
+      }
+      return P;
+   }
+
+   // first, find P0 = point with lowest Y and if tie: rightmost X
+   int P0 = std::min_element(P.begin(), P.end()) - P.begin();
+   std::swap(P[0], P[P0]);
+
+   // second, sort points by angle around P0, O(n log n) for this sort
+   std::sort(++P.begin(), P.end(), [&P](const point &a, const point &b) {
+      // 如果有conlinear的情况出现，需要注意在同一条线上的点要正确排序：
+      // * 右半部分：按照y坐标从小到大。
+      // * 左半部分：按照y坐标从大到小。
+      return ccw(P[0], a, b);
+      });
+
+   // third, the ccw tests, although complex, it is just O(n)
+   std::vector<point> S = {P[n-1], P[0], P[1]};
+   int i = 2;
+   while (i < n) {
+      int j = (int)S.size() - 1;
+      if (ccw(S[j-1], S[j], P[i]))
+         S.push_back(P[i++]);
+      else
+         S.pop_back();
+   }
+   return S;
+}
+
+// CH: Convex Hull;
+// O(nlogn)
+std::vector<point> CH_Andrew(std::vector<point> &Pts) {
+   int n = (int)Pts.size(), k = 0;
+   std::vector<point> P(Pts);
+   sort(P.begin(), P.end());                  // sort the points by x/y
+   std::vector<point> H(2 * n);
+
+   for (int i = 0; i < n; ++i) {                  // build lower hull
+      while ((k >= 2) && !ccw(H[k - 2], H[k - 1], P[i])) --k;
+      H[k++] = P[i];
+   }
+
+   for (int i = n - 2, t = k + 1; i >= 0; --i) {       // build upper hull
+      while ((k >= t) && !ccw(H[k - 2], H[k - 1], P[i])) --k;
+      H[k++] = P[i];
+   }
+   H.resize(k);
+   return H;
+}
+
+// CH: Convex Hull;
+// Jarvis March. O(nh) where h is the count of the result points.
+std::vector<point> CH_Jarvis(std::vector<point> &Pts) {
+   /*
+    * 1. start from the point with the lowest Y coordinate.
+    * 2. go through all the left points, to find the one with the smallest ccw.
+    * 3. repeat until reaching the starting point.
+    */
+}
+
+/*
+ * Great - Circle Distance.Given two points on Earth(latitude & longitude),
+ * get the shortest distance along a path on the surface of the sphere.
+ */
+double gcDistance(double pLat, double pLong,
+                  double qLat, double qLong,
+                  double radius)
+{
+   pLat = DEG_to_RAD(pLat);
+   pLong = DEG_to_RAD(pLong);
+   qLat = DEG_to_RAD(qLat);
+   qLong = DEG_to_RAD(qLong);
+   return radius * acos(cos(pLat)*cos(pLong)*cos(qLat)*cos(qLong) +
+                        cos(pLat)*sin(pLong)*cos(qLat)*sin(qLong) +
+                        sin(pLat)*sin(qLat));
+}

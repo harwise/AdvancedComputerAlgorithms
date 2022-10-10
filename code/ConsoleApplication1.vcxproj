@@ -151,11 +151,15 @@
     <ClCompile Include="EulerianGraph.cpp" />
     <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="Graph.h" />
+    <ClCompile Include="Iterative-Deepening-A-Star.cpp" />
     <ClCompile Include="math-CycleFinding.cpp" />
     <ClCompile Include="math-Exponentiation.cpp" />
+    <ClCompile Include="math-LinearAlgebra.cpp" />
     <ClCompile Include="math-Numbers.cpp" />
     <ClCompile Include="Permutation.cpp" />
     <ClCompile Include="SegmentTree.cpp" />
+    <ClCompile Include="Sliding-Window.cpp" />
+    <ClCompile Include="SparseTable.cpp" />
     <ClCompile Include="Strings.cpp" />
     <ClCompile Include="Trees.cpp" />
     <ClCompile Include="TreeTraversal.cpp" />

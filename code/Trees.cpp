@@ -98,6 +98,32 @@ public:
       return up_[u][0];
    }
 
+   // Lowest Common Ancestor
+   // Range Minimum Query: see SparseTable; SegmentTree/FenwickTree.
+   // 
+   // The key idea is that LCA(u, v) is the shallowest vertex in the tree
+   // that is visited between the visits of u and v during a DFS traversal.
+   void lca_build_rmq() {
+      idx_ = 0;
+      memset(H_, -1, sizeof H_);
+      lca_dfs(0, 0);
+   }
+   void lca_dfs(int cur, int depth) {
+      H_[cur] = idx_;
+      E_[idx_] = cur;
+      L_[idx_++] = depth;
+      for (int i = 0; i < children_[cur].size(); i++) {
+         lca_dfs(children_[cur][i], depth+1);
+         /*
+          * backtrack to current node.
+          * so for each node, (1 + edgecount) times are visited.
+          * Over all nodes. _idx is in range [0, V+E) = [0, 2*V-1);
+          */
+         E_[idx_] = cur;
+         L_[idx_++] = depth;
+      }
+   }
+
    int diameter() {
       /*
        * Tree: O(V)
@@ -177,4 +203,39 @@ private:
    int timer_;
    int l_;
    std::vector<vi> up_;    // up[i][j] is the 2^j-th ancestor
+
+   // for lca_build_rmq
+   static constexpr int MAX_N_ = 100;
+   int E_[MAX_N_*2];        // the sequence of visisted nodes. idx -> v_index
+   int H_[MAX_N_];          // the first occurence of v.       v_index -> idx
+   int L_[MAX_N_*2];        // depth of each visit.            idx -> depth
+   int idx_;
+   std::vector<vi> children_;
 };
+
+
+/*
+ * https://github.com/e-maxx-eng/e-maxx-eng/blob/master/src/graph/pruefer_code.md
+ *
+ * Prüfer code (or Prüfer sequence), which is a way of encoding a labeled tree
+ * into a sequence of numbers in a unique way.
+ *
+ * With the help of the Prüfer code we will prove Cayley's formula
+ * (which specified the number of spanning trees in a complete graph).
+ * 
+ * Also we show the solution to the problem of counting the number of ways of
+ * adding edges to a graph to make it connected.
+ */
+
+/*
+ * Cayley(n) = n^(n-2)
+ *
+ * Is there a nice formula for counting the number T(n) of unlabeled trees
+ * on n vertices? Starting from n = 2 we have T(n) : T(2) = 1, T(3) = 1,
+ * T(4) = 2, T(5) = 3.
+ * T(n) > Cayley(n) / n!
+ * It is an open problem to find a closed form formula for T(n).
+ */
+
+
+

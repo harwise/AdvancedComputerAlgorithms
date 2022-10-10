@@ -13,21 +13,12 @@
 
 class BipartiteGraph : public Graph {
 public:
-   // Max Cardinality Bipartite Matching
-   void mcbm_max_flow() {
-      // EK:      O(VEE)
-      // Dinic:   O(VVE)
-      // MCBM can be reduced to the Max Flow problem.
-   }
 
-   // Max Cardinality Bipartite Matching
+   // MCBM: Max Cardinality Bipartite Matching
+   /*
+    * Can only apply to Unweighted MCBM.
+    */
    int mcbm_alternating_path() {
-      /*
-       * The blossom algorithm finds a maximum-cardinality matching in general
-       * (not necessarily bipartite) graphs. It runs in time O(VVE).
-       * 不具有公共端点的边的集合。
-       */
-
       // O(VV+VE)
       int cardinality = 0;
       owner_.assign(V_, -1);
@@ -52,6 +43,37 @@ public:
          }
       }
       return 0;
+   }
+
+   // MCBM: Max Cardinality Bipartite Matching
+   /*
+    * Can only apply to Unweighted MCBM.
+    * Based on the Augmenting Path algorithm, but explores the shorter path
+    * augumenting path first. It is proved that in this way only O(sqrt(v))
+    * iterations is required.
+    */
+   int mcbm_Hopcroft_Karp() {
+      // O(sqrt(V)*E)
+      // TODO
+      return 0;
+   }
+
+   // MCBM: Max Cardinality Bipartite Matching
+   /*
+    * Weighted MCBM can be reduced to MCMF (Min Cost Max Flow)
+    */
+   void mcbm_max_flow() {
+      // EK:      O(VEE)
+      // Dinic:   O(VVE)
+      // MCBM can be reduced to the Max Flow problem.
+   }
+
+   /*
+    * Kuhn-Munkres’s Hungarian algorithm
+    * Get perfect bipartite matching with minimum cost.
+    */
+   void mcbm_Kuhn_Munkres() {
+      // TODO
    }
 
    // Max Independent Set (of vertices)

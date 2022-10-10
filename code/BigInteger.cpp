@@ -390,6 +390,13 @@ BigInt sqrt(BigInt &a) {
    return v;
 }
 
+/*
+ * Catalan Number:
+ * How many types of binary trees can be formed by n vertices.
+ * The number of ways n parentheses can be correctly matched.
+ * C(n+1) = C(0)*C(n) + C(1)*C(n-1) + ...C(i)*C(n-i)... + C(n)*C(0)
+ * C(n) = C(2n, n) / (n+1)
+ */
 BigInt NthCatalan(int n) {
    BigInt a(1), b;
    for (int i = 2; i <= n; i++)
