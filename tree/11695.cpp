@@ -1,4 +1,4 @@
-//http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=24&page=show_problem&problem=2742
+﻿//http://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=24&page=show_problem&problem=2742
 //#tag graph tree arvore grafos
 //#tag diameter diametro 
 //#tag longest path 
@@ -110,7 +110,10 @@ int main(){
 			vector<int> v1,v2,v3; int sz1 , sz2, sz3;
 			v1 = getLongest( vm[i] , mp( vm[i], vm[i+1]), mp(-1,-1)); sz1 = v1.size();
 			v2 = getLongest( vm[i+1] , mp( vm[i], vm[i+1]), mp(-1,-1)); sz2 = v2.size();
-			v3 = getLongest( vm[i] , mp( vm[i], vm[i+1]), mp(v1[sz1/2], v2[sz2/2])); sz3 = v3.size();			
+
+			// 不用这么找；sz3 = max(sz1, sz2, ceil(sz1 / 2) + ceil(z2 / 2) + 1)
+			v3 = getLongest( vm[i] , mp( vm[i], vm[i+1]), mp(v1[sz1/2], v2[sz2/2])); sz3 = v3.size();
+
 			if( sz3 < best ){
 				best = sz3;
 				rm1 = vm[i], rm2 = vm[i+1], add1= v1[sz1/2], add2 = v2[sz2/2];

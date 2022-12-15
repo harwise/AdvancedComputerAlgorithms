@@ -1,6 +1,7 @@
-#include <cmath>
+﻿#include <cmath>
 #include <bitset>
 #include <vector>
+#include <tuple>
 #include <algorithm>
 
 int dec_num_digits(int a)
@@ -319,11 +320,66 @@ public:
       y_ = y1;
    }
 
+   /* solve ax + by = gcd(a, b) */
+   static int SolveIterative(int a, int b, int &x, int &y) {
+      /*
+       * invariants:
+       * a*x + b*y = a1
+       * a*x1 + b*y1 = b1
+       * 
+       * a*1 + b*0 = a1
+       * a*0 + b*1 = b1
+       */
+      x = 1, y = 0;
+      int x1 = 0, y1 = 1, a1 = a, b1 = b;
+
+      while (b1) {
+         /*
+          *   (a*x + b*y = a1)
+          * - (a*x1 + b*y1 = b1)*q
+          * ----------------------
+          * = a*(x-q*x1) + b*(y-q*y1) = a1 - q*b1
+          * 
+          * Notice that (a1 - q*b1 = a1 % b1)
+          */
+         int q = a1 / b1;
+         std::tie(x, x1) = std::make_tuple(x1, x - q * x1);
+         std::tie(y, y1) = std::make_tuple(y1, y - q * y1);
+         std::tie(a1, b1) = std::make_tuple(b1, a1 - q * b1);
+      }
+
+      /*
+       * Finally, b1 = 0, a1 = gcd(a,b).
+       * i.e. a*x + b*y = a1 = gcd(a,b).
+       */
+      return a1;
+   }
+
 private:
    int x_;
    int y_;
    int d_;
 };
+
+
+/*
+ * Chinese Remainder Theorem
+ * 
+ * x =  ( ∑ (rem[i]*pp[i]*inv[i]) ) % prod
+ * Where 0 <= i <= n-1
+
+ * rem[i] is given array of remainders
+
+ * prod is product of all given numbers
+ * prod = num[0] * num[1] * ... * num[k-1]
+
+ * pp[i] is product of all divided by num[i]
+ * pp[i] = prod / num[i]
+
+ * inv[i] = Modular Multiplicative Inverse of 
+ *          pp[i] with respect to num[i]
+ */
+
 
 /*
  * Josephus Problem

@@ -31,7 +31,7 @@ int main()
 			int t = coin[i].tech;
 			for(int x=v ; x*x+t*t<=s*s ; x++)
 				for(int y=t ; x*x+y*y<=s*s ; y++)
-					dp[x][y] = min(dp[x][y], dp[x-v][y-t]+1);
+					dp[x][y] = min(dp[x][y], dp[x-v][y-t]+1);		// input->output 方向会不会更好？因为input有很多无效元素。
 		}
 
 		long long int res = INF;

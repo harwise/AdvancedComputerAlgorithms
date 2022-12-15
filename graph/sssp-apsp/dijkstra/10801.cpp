@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <algorithm>
 #define oo 0xffffff
 using namespace std;
@@ -31,14 +31,24 @@ int main() {
         for(i = 0; i < 100; i++)
             used[i] = 0, DIS[i] = oo;
         DIS[0] = 0;
+
+        // 两个节点间的边是最快电梯对应的边。
+        // 在某一层停靠但不换乘电梯的情况，没有必要考虑了，因为已经穷举了一个电梯的所有情况了。
+
+        // V = 100, E = 100*100
+
+        // Adjacency Matrix + Dijkstra's
         for(i = 0; i < 100; i++) {
             int mn = oo, tn;
+
+            // 仍然是Dijkstra's，通过遍历一遍找出最小值。
             for(j = 0; j < 100; j++)
                 if(used[j] == 0 && DIS[j] < mn)
                     mn = DIS[j], tn = j;
             if(mn == oo || tn == K) break;
             used[tn] = 1;
             for(j = 0; j < 100; j++)
+                // 在某一层停靠但不换乘电梯的情况会被这里的判断过滤掉。
                 if(g[tn][j] && DIS[j] > DIS[tn]+g[tn][j]+60)
                     DIS[j] = DIS[tn]+g[tn][j]+60;
         }

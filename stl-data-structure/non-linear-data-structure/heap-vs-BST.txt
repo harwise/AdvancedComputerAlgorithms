@@ -11,3 +11,7 @@ All average times on this table are the same as their worst times except for Ins
 *: everywhere in this answer, BST == Balanced BST, since unbalanced sucks asymptotically
 **: using a trivial modification explained in this answer
 ***: log(n) for pointer tree heap, n for dynamic array heap [because copying the backing dynamic array to double its size takes O(n) worst case]
+
+往Heap中插入数据，因为不需要完全排序，所以会耗时少。
+但是Heap因为没完全排序，查找元素的操作是不合适的。
+

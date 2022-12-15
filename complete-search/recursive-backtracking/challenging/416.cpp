@@ -1,72 +1,37 @@
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-char table[10][7] = {
-  {'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'N'},
-  {'N', 'Y', 'Y', 'N', 'N', 'N', 'N'},
-  {'Y', 'Y', 'N', 'Y', 'Y', 'N', 'Y'},
-  {'Y', 'Y', 'Y', 'Y', 'N', 'N', 'Y'},
-  {'N', 'Y', 'Y', 'N', 'N', 'Y', 'Y'},
-  {'Y', 'N', 'Y', 'Y', 'N', 'Y', 'Y'},
-  {'Y', 'N', 'Y', 'Y', 'Y', 'Y', 'Y'},
-  {'Y', 'Y', 'Y', 'N', 'N', 'N', 'N'},
-  {'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y'},
-  {'Y', 'Y', 'Y', 'Y', 'N', 'Y', 'Y'},
-};
-int LED[10];
-int inputs[10];
-char s[10];
-
-bool dfs(int v, int n, int maxx) {
-  if (n < 0) {
-    return true;
-  }
-
-  for (int i = 0; i <= maxx; i++) {
-    // i 是 maxx 壞掉燈管的一部分， LED & 壞掉 == inputs
-    if ((i&maxx) == i && (LED[v]&i) == inputs[n])
-      if (dfs(v-1, n-1, i))
-        return true;
-  }
-  return false;
+#include<cstdio>
+using namespace std;
+ 
+int digit[10] = { 0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B };
+int n, input[16];
+bool match;
+ 
+void solve(int inputI, int digitI, int badMask) {
+    // finished
+    if (inputI == n)
+        match = true;
+    // more input
+    else if (!(input[inputI] & badMask)) // matches old burns
+        if (((digit[digitI] ^ input[inputI]) & input[inputI]) == 0) // new burns not revivals
+            solve(inputI + 1, digitI - 1, (input[inputI] ^ digit[digitI]) | badMask);
 }
-
-int main(void)
-{
-  int N;
-  int match;
-
-  memset(LED, 0, sizeof(LED));
-
-  for (int i = 0; i < 10; i++)
-    for (int j = 0; j < 7; j++)
-      if (table[i][j] == 'Y')
-        LED[i] += (int)pow(2, j);
-
-
-  while (EOF != scanf("%d", &N) && N) {
-
-    match = 0;
-
-    memset(inputs, 0, sizeof(inputs));
-    for (int i = N-1; i >= 0; i--) {
-      scanf(" %s", s);
-      for (int j = 0; j < 7; j++) { 
-        if (s[j] == 'Y')
-          inputs[i] += (int)pow(2, j);
-      }
+ 
+char ans[2][16] = { "MISMATCH\n", "MATCH\n" };
+char line[8], *p;
+ 
+int main() {
+    while (scanf("%d", &n) == 1 && n) {
+        // input
+        for (int i = 0; i < n; ++i) {
+            scanf("%s", p = line);
+            input[i] = 0;
+            do
+                input[i] |= ((*p == 'Y') << (line + 6 - p));
+            while (*++p);
+        }
+        // solution
+        match = false;
+        for (int digitI = 9; digitI >= n - 1 && !match; --digitI)
+            solve(0, digitI, 0);
+        printf("%s", ans[match]);
     }
-
-    for (int i = N-1; i < 10; i++)
-      if (dfs(i, N-1, 127)) {
-        match = 1;
-        break;
-      }
-
-    if (match) printf("MATCH");
-    else printf("MISMATCH");
-    puts("");
-  }
-
-  return 0;
 }

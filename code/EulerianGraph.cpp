@@ -71,10 +71,10 @@ public:
              *    4----   ----2
              * 
              * 
-             *    DFS traverse:                 0 -> 1 -> 2
-             *    unwind to 1:                  0 -> 1(it) -> 2
-             *    insert u and go next edge:    0 -> [1(it)] -> 1 -> 2
-             *    DFS traverse:                 0 -> [1 -> 3 -> 4] -> 1 -> 2
+             *    DFS traverse:                 2,1,0    （注意到后面访问的节点是插入到list前面）
+             *    unwind to 1:                  2,1,(it)0
+             *    insert u and go next edge:    2,1,[1],0
+             *    DFS traverse:                 2,1,[3,4,1],0
              */
             unweighted_Euler_tour(cyc_.insert(it, u), v.first);
          }

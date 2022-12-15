@@ -22,7 +22,10 @@
  * Query: sum of prefix sums.
           The count of bit 1 is how many prefix sums are taken.
  * Update: doulbe the lowest bit 1 until overflow.
-           The count of bit 0 is the loop count (how many prefix sums are updated).
+           The count of non-tailing bit 0, added with one, is the loop count (how many prefix sums are updated).
+ * E.g. 0010
+ *      00(1)0    we need one prefix in Query.
+ *      (0)(0)10  We need to update (two + 1) slots in Update: 0010, 0100, 1000
  */
 
 #include <vector>

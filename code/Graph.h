@@ -807,6 +807,10 @@ public:
    {
       Edge edge();
       Edges.emplace_back(from, to, cap, 0, cost);   //正向弧
+      /*
+       * 反向弧的cap是0，是有意义的。因为反向flow是负值(对应正向flow的正值)，那么
+       * 反向flow最大不能超过0，成为正值，否则导致正向flow成为负值没有意义了。
+       */
       Edges.emplace_back(to, from, 0, 0, -cost);    //反向弧
       int len = Edges.size();
       G[to].push_back(len - 1);

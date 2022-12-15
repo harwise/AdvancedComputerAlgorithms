@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -19,13 +19,13 @@ void dfs(int Idx) {
         return ;
     }
     int i, j;
-    for(i = 0; i < n; i++) {
+    for(i = 0; i < n; i++) {                    // 按照字母序遍历所有
         if(!used[i]) {
-            for(j = 0; j < Idx; j++) {
+            for(j = 0; j < Idx; j++) {          // 如果有未占用的字母能走到这个字母，那么这个字母不可用（违背了顺序）
                 if(g[s[i]-'A'][ans[j]-'A'])
                     break;
             }
-            if(j == Idx) {
+            if(j == Idx) {                      // 如果可用，继续递归
                 ans[Idx] = s[i];
                 used[i] = 1;
                 dfs(Idx+1);
