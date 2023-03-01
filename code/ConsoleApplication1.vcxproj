@@ -144,14 +144,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BigInteger.cpp" />
+    <ClCompile Include="binary-indexing.cpp" />
     <ClCompile Include="BipartiteGraph.cpp" />
     <ClCompile Include="Computational-Geometry.cpp" />
     <ClCompile Include="ConsoleApplication1.cpp" />
     <ClCompile Include="DAG.cpp" />
+    <ClCompile Include="DP-Convex-Hull-Trick.cpp" />
     <ClCompile Include="EulerianGraph.cpp" />
     <ClCompile Include="FenwickTree.cpp" />
     <ClCompile Include="Graph.h" />
     <ClCompile Include="Iterative-Deepening-A-Star.cpp" />
+    <ClCompile Include="LiChaoTree.cpp" />
     <ClCompile Include="math-CycleFinding.cpp" />
     <ClCompile Include="math-Exponentiation.cpp" />
     <ClCompile Include="math-LinearAlgebra.cpp" />

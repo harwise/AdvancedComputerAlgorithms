@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Segment Tree
  * Interval Tree
  * Tournament Tree
@@ -126,5 +126,3 @@ private:
    // payload
    std::vector<int> _min;
 };
-
-

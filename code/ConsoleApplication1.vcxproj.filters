@@ -78,6 +78,15 @@
     <ClCompile Include="Sliding-Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DP-Convex-Hull-Trick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LiChaoTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="binary-indexing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinarySearch.cpp">
