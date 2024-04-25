@@ -77,6 +77,16 @@ public:
              *    DFS traverse:                 2,1,[3,4,1],0
              */
             unweighted_Euler_tour(cyc_.insert(it, u), v.first);
+
+            /*
+             * 通过先遍历子节点，再输入当前节点。可以不用队列。
+             * 
+             * procedure FindEulerPath(V)
+             * 1. iterate through all the edges outgoing from vertex V;
+             *       remove this edge from the graph,
+             *       and call FindEulerPath from the second end of this edge;
+             * 2. add vertex V to the answer.
+             */
          }
       }
    }
