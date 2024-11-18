@@ -56,7 +56,7 @@ double Solve(int n, int mk)
       // target: k+1 group
       // fill dp[k+1], ..., dp[n-mk+k+1].
 
-      for (int p = k; p <= n-mk+k; ++p) {
+      for (int p = k; p <= n - mk + k; ++p) {
          int begin = p, end = n - mk + k + 1;
 
          int leftItemR = 2 * x[p - 1] - x[(p - 1 + beginIndex0[p]) / 2];       // greater than this
@@ -105,21 +105,67 @@ double Solve(int n, int mk)
    return dp0[n];
 }
 
+double Solve2(int n, int mk)
+{
+   std::sort(x, x + n);
+
+   std::vector<int> dp(n + 2);      // opt(i) of layer k
+   std::vector<int> dp_1(n + 2);    // opt(i) of layer k-1
+   std::vector<int> fk(n + 1);      // f(i) of layer k
+   std::vector<int> fk_1(n + 1);    // f(i) of layer k-1
+
+   for (int i = 0; i < n; ++i) {
+      for (int j = i + 1; j <= n; ++j) {
+         values[i][j] = values[i][j - 1] + (x[j - 1] - x[i + (j - 1 - i) / 2]);
+      }
+   }
+
+   // k = 1
+   for (int i = 0; i <= n; ++i) {
+      dp_1[i] = 0;
+      fk_1[i] = values[0][i];
+   }
+   dp[n + 1] = dp_1[n + 1] = n;
+
+   for (int k = 2; k <= mk; ++k) {
+      for (int i = n; i >= k; --i) {
+         fk[i] = std::numeric_limits<int>::max();
+         for (int j = dp_1[i]; j <= dp[i + 1]; ++j) {
+            int v = values[j][i];
+            if (v + fk_1[j] < fk[i]) {
+               fk[i] = v + fk_1[j];
+               dp[i] = j;
+            }
+         }
+      }
+      std::swap(dp, dp_1);
+      std::swap(fk, fk_1);
+   }
+
+   return fk_1[n];
+}
+
+
 int main() {
    int n, mk;
    scanf("%d%d", &n, &mk);
    for (int i = 0; i < n; i++) scanf("%d", x + i);
 
-   //n = 10;
-   //mk = 3;
+   //n = 20;
+   //mk = 4;
    //while (1) {
    //   for (int i = 0; i < n; i++) {
    //      x[i] = rand() % 20;
    //   }
    //   double ans = Solve(n, mk);
+   //   double ans2 = Solve2(n, mk);
+   //   if (ans != ans2) {
+   //      return -1;
+   //   }
    //}
 
-   double ans = Solve(n, mk);
+   //double ans = Solve(n, mk);
+   double ans = Solve2(n, mk);
 
    printf("%.4lf\n", ans);
    return 0;

@@ -17,6 +17,15 @@ public:
    // MCBM: Max Cardinality Bipartite Matching
    /*
     * Can only apply to Unweighted MCBM.
+    * 
+    * Hungarian algorithm.
+    * 1. 为什么找不到增广路就一定是最大匹配了？
+    *    假设通过此算法得到的匹配不是最大匹配，前者为H，后者为B。
+    *    构造一条路径，从 B 的一个点出发，B 和 H 的边交替出现。
+    *    通过这种路径的关键特性，能够得到 V(H) >= V(B)，与假设矛盾。
+    * 
+    * 2. 为什么只遍历一次就够了？
+    *    因为一条增广路，如果后面能找到的话，前面一定也能（更能）找到。
     */
    int mcbm_alternating_path() {
       // O(VV+VE)
